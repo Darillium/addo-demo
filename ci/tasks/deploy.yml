@@ -1,0 +1,27 @@
+---
+platform: linux
+ 
+image_resource:
+  type: registry-image
+  source:
+    repository: darilliumgalaxy/kubectl-gcloud-vault
+    tag: 13.1-226.0.0-1.1.1-ubuntu-18.04-1.0
+
+inputs:
+- name: git-repo
+
+run:
+  path: git-repo/ci/scripts/deploy.sh
+params:
+  GCLOUD_CREDENTIALS: ((galaxy.gcloud_credentials))
+  GCP_PROJECT: ((addo.gcp_project))
+  CLUSTER_NAME: ((addo.cluster_name))
+  CLUSTER_REGION: ((addo.cluster_region)) # show this
+  DOCKER_IMAGE_TAG: git-repo/.git/short_ref
+  DOCKERHUB_REPO_OWNER: darilliumgalaxy
+  APP_NAME: addo-demo
+  K8S_RESOURCE_PATH: git-repo/ci/k8s
+
+
+
+  

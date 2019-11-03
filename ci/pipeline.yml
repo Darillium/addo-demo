@@ -1,0 +1,81 @@
+---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+resources:
+- name: git-repo
+  type: git
+  icon: github-circle
+  source:
+    uri: https://github.com/Darillium/addo-demo.git
+    branch: master
+    username: ((galaxy.github_username))
+    password: ((galaxy.github_password))
+    ignore_paths:
+    - README.md
+    - ci/pipeline.yml
+
+- name: docker-repo
+  type: docker-image
+  icon: docker
+  source:
+    email: ((galaxy.dockerhub_email))
+    username: ((galaxy.dockerhub_username))
+    password: ((galaxy.dockerhub_password))
+    repository: darilliumgalaxy/addo-demo
+
+- name: notify
+  type: slack-notification
+  icon: slack
+  source:
+    url: ((galaxy.slack_webhook_ronen))
+
+jobs:
+  - name: build
+    serial: true
+    plan:
+      - get: git-repo
+        trigger: true
+      - put: docker-repo
+        params:
+          build: git-repo #path to dockerfile
+          dockerfile: git-repo/Dockerfile
+          additional_tags: git-repo/.git/short_ref  #tags/file1 
+    on_failure:
+      put: notify
+      params:
+        username:  concourse
+        icon_url:  https://seeklogo.com/images/C/concourse-logo-42A9F81B42-seeklogo.com.png
+        attachments: 
+          - text: "Build Failed - *addo-demo*/master $BUILD_ID (<https://concourse.galaxy-nebula.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Open>)"
+            color: "danger"
+            
+  - name: deploy
+    # public: true
+    serial: true
+    plan:
+      - in_parallel:
+        # - get: maven-runtime #where we are running the job
+        - get: git-repo
+          trigger: true
+      - task: deploy-k8s
+        file: git-repo/ci/tasks/deploy.yml
+    on_success:
+      put: notify
+      params:
+        username:  concourse
+        icon_url:  https://seeklogo.com/images/C/concourse-logo-42A9F81B42-seeklogo.com.png
+        attachments: 
+          - text: "Pipeline Successfull - *addo-demo*/master $BUILD_NAME (<https://concourse.galaxy-nebula.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Open>)"
+            color: "good"
+    on_failure:
+      put: notify
+      params:
+        username:  concourse
+        icon_url:  https://seeklogo.com/images/C/concourse-logo-42A9F81B42-seeklogo.com.png
+        attachments: 
+          - text: "Tag Failed - *addo-demo*/master $BUILD_NAME (<https://concourse.galaxy-nebula.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Open>)"
+            color: "danger"
