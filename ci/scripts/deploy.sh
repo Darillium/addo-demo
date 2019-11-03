@@ -2,6 +2,7 @@
 
 set -eu
 
+echo 
 export DOCKER_IMAGE_TAG=$(cat $DOCKER_IMAGE_TAG_FILE)
 
 echo "Getting kubeconfig..."
@@ -19,7 +20,7 @@ echo "Got kubeconfig"
 
 echo "Deploying resources..."
 export IMG=${DOCKERHUB_REPO_OWNER}/${APP_NAME}:${DOCKER_IMAGE_TAG}
-print "Setting image to $IMG..."
+echo "Setting image to $IMG..."
 sed -i'' -e 's@image: '"${DOCKERHUB_REPO_OWNER}/${APP_NAME}"':.*@image: '"${IMG}"'@' ${K8S_RESOURCE_PATH}/cronJob.yaml
 
 kubectl apply -f ${K8S_RESOURCE_PATH}
