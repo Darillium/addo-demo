@@ -60,6 +60,7 @@ jobs:
       - in_parallel:
         # - get: maven-runtime #where we are running the job
         - get: git-repo
+          passed: [build]
           trigger: true
       - task: deploy-k8s
         file: git-repo/ci/tasks/deploy.yml
