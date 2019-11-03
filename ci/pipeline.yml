@@ -78,5 +78,5 @@ jobs:
         username:  concourse
         icon_url:  https://seeklogo.com/images/C/concourse-logo-42A9F81B42-seeklogo.com.png
         attachments: 
-          - text: "Tag Failed - *addo-demo*/master $BUILD_NAME (<https://concourse.galaxy-nebula.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Open>)"
+          - text: "Deploy Failed - *addo-demo*/master $BUILD_NAME (<https://concourse.galaxy-nebula.com/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Open>)"
             color: "danger"

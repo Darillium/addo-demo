@@ -2,6 +2,7 @@
 
 set -eu
 
+export DOCKER_IMAGE_TAG=$(cat $DOCKER_IMAGE_TAG_FILE)
 
 echo "Getting kubeconfig..."
 echo ${GCLOUD_CREDENTIALS} | base64 -d > .creds
