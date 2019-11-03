@@ -1,0 +1,22 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: addo-demo
+spec:
+  schedule: "* * * * *" #every minute
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: addo-demo
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - image: darilliumgalaxy/addo-demo:latest
+            name: addo-demo
+            imagePullPolicy: Always
+            env:
+            - name: COMPONENT
+              value: "java"
