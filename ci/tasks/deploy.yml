@@ -13,7 +13,7 @@ inputs:
 run:
   path: git-repo/ci/scripts/deploy.sh
 params:
-  GCLOUD_CREDENTIALS: ((galaxy.gcloud_credentials))
+  GCLOUD_CREDENTIALS: ((addo.gcloud_credentials))
   GCP_PROJECT: ((addo.gcp_project))
   CLUSTER_NAME: ((addo.cluster_name))
   CLUSTER_REGION: ((addo.cluster_region)) # show this
