@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: addo-demo
 spec:
-  schedule: "* * * * *" #every minute
+  schedule: "* * * * *" #every minute. real life every morning
   jobTemplate:
     spec:
       template:

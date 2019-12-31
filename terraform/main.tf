@@ -31,8 +31,8 @@ resource "google_container_cluster" "main" {
   min_master_version       = "latest"
   remove_default_node_pool = true
   initial_node_count       = 1
-  network                  = "${google_compute_network.main.name}"
-  subnetwork               = "${google_compute_subnetwork.main.name}"
+  network                  = "${google_compute_network.main.id}"
+  subnetwork               = "${google_compute_subnetwork.main.id}"
 
   maintenance_policy {
     daily_maintenance_window {
@@ -56,7 +56,7 @@ resource "google_container_cluster" "main" {
     provider = "CALICO"
   }
   node_config {
-    image_type = "ubuntu"
+    image_type = "UBUNTU"
     service_account = "${var.deployment_name}@${var.project_name}.iam.gserviceaccount.com"
   }
 }
@@ -82,6 +82,6 @@ resource "google_container_node_pool" "main" {
     disk_size_gb    = 50
     machine_type    = "${var.machine_type}"
     service_account = "${var.deployment_name}@${var.project_name}.iam.gserviceaccount.com"
-    image_type      = "ubuntu" #hard coded as default
+    image_type      = "UBUNTU" #hard coded as default
   }
 }

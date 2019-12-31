@@ -21,7 +21,7 @@ for key in $(jq '.CVE_Items | keys | .[]' $file_name); do
     cve_id=$(jq -r ".CVE_Items[$key].cve.CVE_data_meta.ID" $file_name);
     #check if description contains component
     if [[ $description == *$COMPONENT* ]]; then
-        echo "CVE $cve_id triggered by component $COMPONENT"
+        echo "CVE $cve_id triggered by component \"$COMPONENT\""
         #alert slack
     else 
         echo "Skipping CVE $cve_id..."
